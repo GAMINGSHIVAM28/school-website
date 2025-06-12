@@ -5,16 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Colonel Academy of Radiant Education - Premier educational institution in Bilaspur">
   <title>Colonel Academy of Radiant Education</title>
-  <link rel="stylesheet" href="style.css">
-    <script src="test.js"></script>
+  <!-- Minimize CSS: Inline critical CSS for faster first paint -->
+  <style>
+    body {margin:0;font-family:sans-serif;background:#fff;color:#222;}
+    header,footer{padding:1rem;text-align:center;background:#f8f8f8;}
+    .navbar{display:flex;justify-content:center;gap:1rem;margin:1rem 0;}
+    .navbar a{text-decoration:none;color:#0077cc;font-weight:500;}
+    .header-banner{text-align:center;padding:2rem 1rem;}
+    .logo{max-width:180px;width:100%;height:auto;margin:1rem auto;display:block;}
+    .photo-button{display:inline-block;margin:2rem auto 0;padding:0.75rem 1.5rem;background:#0077cc;color:#fff;text-decoration:none;border-radius:4px;font-weight:600;}
+    @media (max-width:600px){
+      .header-banner{padding:1rem;}
+      .logo{max-width:120px;}
+      .navbar{flex-direction:column;gap:0.5rem;}
+    }
+    /* Loader styles */
+    #loader{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.5s;}
+    #loader.hide{opacity:0;pointer-events:none;}
+    .spinner{border:4px solid #eee;border-top:4px solid #0077cc;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;}
+    @keyframes spin{100%{transform:rotate(360deg);}}
+  </style>
+  <!-- Defer non-critical JS -->
+  <script src="test.js" defer></script>
 </head>
 <body>
+  <!-- Simple loader for smooth experience -->
+  <div id="loader"><div class="spinner"></div></div>
   <header>
     <h1>
       Colonel Academy of Radiant Education<br>
       <span>Mangal Bilaspur (C.G)</span>
     </h1>
-    
     <nav class="navbar" aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a href="Topper.html">Toppers</a>
@@ -22,27 +43,27 @@
       <a href="Contact.html">Contact</a>
     </nav>
   </header>
-
   <main>
     <section class="header-banner">
       <h2>Welcome to Colonel Academy of Radiant Education</h2>
       <p>Where Excellence Meets Education</p>
-      <img src="download.jpg" alt="Colonel Academy logo - open book with graduation cap" class="logo">
+      <!-- Lazy load image for performance -->
+      <img src="download.jpg" alt="Colonel Academy logo - open book with graduation cap" class="logo" loading="lazy" width="180" height="180">
       <h3>"Empowering Students for a Brighter Future"</h3>
       <p>Join us in our journey towards academic excellence and holistic development.</p>
     </section>
-
     <a href="./photos.html" class="photo-button">Our Building Photos</a>
   </main>
-   <footer>
+  <footer>
     <p>&copy; 2025 Colonel Academy of Radiant Education. All Rights Reserved.</p>
   </footer>
   <script>
     // Hide loader after page loads
     window.addEventListener('load', function() {
-      document.getElementById('loader').classList.add('hide');
+      const loader = document.getElementById('loader');
+      loader.classList.add('hide');
       setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
+        loader.style.display = 'none';
       }, 700);
     });
   </script>
