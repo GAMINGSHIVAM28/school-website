@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://school-website-ten-psi.vercel.app/sitemap.xml
