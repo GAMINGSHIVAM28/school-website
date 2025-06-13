@@ -645,11 +645,7 @@ footer {
 /* Animations */
 /* Removed @keyframes fadeInUp */
 /* Removed @keyframes cardPop */
-.about-card,
-.contact-card,
-.photo-card {
-  /* animation: cardPop 0.9s cubic-bezier(.4,2,.3,1); */
-}
+/* Removed empty ruleset for .about-card, .contact-card, .photo-card */
 
 /* Responsive Design */
 @media (max-width: 1024px) {
