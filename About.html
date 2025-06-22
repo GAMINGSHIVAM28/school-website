@@ -206,6 +206,48 @@
   ];
 
   // Enhanced typing indicator with animation
+
+  // Initialize chatbot data from multiple pages (for future AI enhancements)
+  async function initializeChatbotData() {
+    await Promise.all([
+      indexPageContent('about.html', {
+        // Add selectors for content you want to index from about.html
+        mission: '#mission, .mission-statement, h2:contains("Mission")',
+        history: '#history, .about-history, h2:contains("History")',
+        staff: '#staff, .faculty-list, h2:contains("Our Team")'
+      }),
+      
+      indexPageContent('contact.html', {
+        address: '#address, .location, p:contains("Address")',
+        phone: '#phone, .contact-number, p:contains("Phone")',
+        email: '#email, .contact-email, p:contains("Email")',
+        hours: '#hours, .opening-hours, h3:contains("Hours")'
+      }),
+      
+      indexPageContent('index.html', {
+        welcome: '#welcome, .hero-text, h1:contains("Welcome")',
+        highlights: '#highlights, .features, h2:contains("Highlights")'
+      }),
+      
+      indexPageContent('photos.html', {
+        gallery: '#gallery, .photo-container, h2:contains("Gallery")',
+        facilities: '#facilities, .campus-photos, h3:contains("Facilities")'
+      }),
+      
+      indexPageContent('thank-you.html', {
+        confirmation: '#confirmation, .thank-you-message, h1:contains("Thank")',
+        nextSteps: '#next-steps, .follow-up, p:contains("next steps")'
+      }),
+      
+      indexPageContent('Topper.html', {
+        // Add selectors for your Topper.html content
+        achievements: '#achievements, .top-performers, h2:contains("Achievements")',
+        toppersList: '#toppers-list, .student-list, table.toppers'
+      })
+    ]);
+    
+    console.log('Page indexing completed for all available files');
+  }
   function showTyping() {
     const typing = document.createElement('div');
     typing.id = 'ai-typing';
