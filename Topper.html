@@ -121,6 +121,371 @@
     </style>
 </head>
 <body>
+    <!-- Advanced AI Chatbot Widget with Enhanced Features -->
+<div id="ai-chatbot" style="position:fixed;bottom:20px;right:20px;z-index:1000;">
+  <button id="chatbot-toggle" aria-label="Open AI Chatbot" style="background:#0056b3;color:#fff;border:none;border-radius:50%;width:56px;height:56px;font-size:28px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">💬</button>
+  <div id="chatbot-window" style="display:none;box-shadow:0 5px 15px rgba(0,0,0,0.15);background:#fff;border-radius:12px;width:380px;max-width:90vw;position:absolute;bottom:70px;right:0;height:500px;max-height:70vh;flex-direction:column;display:flex;">
+    <div style="background:linear-gradient(135deg, #0056b3, #003366);color:#fff;padding:14px 18px;border-radius:12px 12px 0 0;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:space-between;">
+      <span><i class="fas fa-robot" style="margin-right:8px;"></i> CARE AI Assistant</span>
+      <button id="chatbot-close" aria-label="Close" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0 0 4px 0;">&times;</button>
+    </div>
+    <div id="chatbot-messages" style="flex:1;overflow-y:auto;padding:16px;font-size:15px;background:#f9f9f9;line-height:1.5;"></div>
+    <div style="padding:12px 16px;background:#fff;border-top:1px solid #eee;border-radius:0 0 12px 12px;">
+      <form id="chatbot-form" style="display:flex;gap:8px;">
+        <input id="chatbot-input" type="text" placeholder="Ask your question respectfully..." autocomplete="off" style="flex:1;padding:10px 14px;border:1px solid #ddd;border-radius:20px;font-size:14px;outline:none;transition:border 0.2s;" onfocus="this.style.borderColor='#0056b3'">
+        <button type="submit" style="background:#0056b3;color:#fff;border:none;padding:0 18px;border-radius:20px;cursor:pointer;font-size:14px;font-weight:500;display:flex;align-items:center;gap:6px;transition:background 0.2s;" onmouseover="this.style.background='#004494'" onmouseout="this.style.background='#0056b3'">
+          <i class="fas fa-paper-plane" style="font-size:14px;"></i> Send
+        </button>
+      </form>
+      <div style="text-align:center;margin-top:8px;font-size:12px;color:#666;">
+        CARE AI is here to assist you respectfully and professionally
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+  // Chatbot UI toggle and close with animations
+  const toggleBtn = document.getElementById('chatbot-toggle');
+  const chatWindow = document.getElementById('chatbot-window');
+  const closeBtn = document.getElementById('chatbot-close');
+  
+  toggleBtn.onclick = () => {
+    if (chatWindow.style.display === 'none' || !chatWindow.style.display) {
+      chatWindow.style.display = 'flex';
+      chatWindow.style.opacity = '0';
+      chatWindow.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        chatWindow.style.opacity = '1';
+        chatWindow.style.transform = 'translateY(0)';
+        chatWindow.style.transition = 'opacity 0.3s, transform 0.3s';
+      }, 10);
+      setTimeout(() => document.getElementById('chatbot-input').focus(), 300);
+    } else {
+      chatWindow.style.opacity = '0';
+      chatWindow.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        chatWindow.style.display = 'none';
+      }, 300);
+    }
+  };
+  
+  closeBtn.onclick = () => {
+    chatWindow.style.opacity = '0';
+    chatWindow.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      chatWindow.style.display = 'none';
+    }, 300);
+  };
+
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!chatWindow.contains(e.target) && e.target !== toggleBtn && chatWindow.style.display === 'flex') {
+      closeBtn.click();
+    }
+  });
+
+  // Chatbot logic with enhanced features
+  const form = document.getElementById('chatbot-form');
+  const input = document.getElementById('chatbot-input');
+  const messages = document.getElementById('chatbot-messages');
+  let chatHistory = [];
+
+  // Enhanced FAQ database with respectful responses
+  const faqs = [
+    {
+      q: /admission|enroll|apply|join|registration/i,
+      a: "Respected visitor, for admission details, you may kindly visit our <a href='Contact.html' style='color:#0056b3;text-decoration:underline;'>Contact page</a> or call our office at +91-XXXXXXXXXX. You could also email us at info@colonelacademy.edu for a prompt response."
+    },
+    {
+      q: /fee|fees|structure|cost|payment|tuition/i,
+      a: "Honored parent/guardian, our fee structure information is available upon request at the school office. For the most accurate and updated details, we kindly suggest contacting our accounts department directly."
+    },
+    {
+      q: /location|where|address|map|directions/i,
+      a: "With respect, our esteemed institution is located in Mangal, Bilaspur (C.G). You may find us on <a href='https://goo.gl/maps/...' target='_blank' style='color:#0056b3;text-decoration:underline;'>Google Maps</a> for your convenience."
+    },
+    {
+      q: /timing|hours|open|close|schedule|operation/i,
+      a: "Respected visitor, our school timings are from 8:00 AM to 2:00 PM, Monday through Saturday. The office remains open until 4:00 PM on working days."
+    },
+    {
+      q: /principal|head|director|headmaster|headmistress/i,
+      a: "With due respect, our esteemed Principal is Mrs. XYZ. For appointments, we kindly request you to contact the school office in advance to schedule a meeting."
+    },
+    {
+      q: /facilities|labs|library|sports|infrastructure|amenities/i,
+      a: "Respected visitor, we take pride in offering state-of-the-art science labs, a comprehensive library, advanced computer labs, and excellent sports facilities to ensure holistic development of our students."
+    },
+    {
+      q: /transport|bus|conveyance|pickup|drop/i,
+      a: "Honored parent, school transport services are available on selected routes. For detailed information about routes, timings, and fees, we kindly suggest contacting our transport in-charge at the school office."
+    },
+    {
+      q: /holiday|vacation|break|calendar|schedule/i,
+      a: "Respected parent/guardian, the holiday list is regularly updated on our notice board and official website. For the most current information, we recommend checking these sources or contacting the school office."
+    },
+    {
+      q: /uniform|dress code|clothes|attire/i,
+      a: "With respect, our school uniform consists of a white shirt with navy blue trousers/skirt. Complete uniform guidelines are available in the student handbook, or you may kindly inquire at the school office for specifics."
+    },
+    {
+      q: /curriculum|syllabus|board|academics|subjects/i,
+      a: "Respected visitor, we follow the esteemed CBSE curriculum with a focus on holistic education and academic excellence. Our pedagogy combines traditional values with modern teaching methodologies."
+    },
+    {
+      q: /result|exam|marks|grades|assessment|report/i,
+      a: "Honored parent, examination results are displayed on the notice board and communicated through official channels. For detailed discussions about your ward's performance, we respectfully suggest scheduling a meeting with the class teacher."
+    },
+    {
+      q: /events|annual day|function|competition|activity|program/i,
+      a: "With pleasure, we inform you that our school organizes various events including the annual function, sports day, and academic competitions. For upcoming events, you may kindly check our website or notice board for announcements."
+    },
+    {
+      q: /teacher|staff|faculty|educator|professor/i,
+      a: "Respected visitor, our faculty comprises highly qualified and dedicated teachers. For specific queries, we kindly request you to contact the school office who will direct you to the appropriate staff member."
+    },
+    {
+      q: /contact|phone|email|reach|communicate/i,
+      a: "With respect, you may contact our esteemed institution at +91-XXXXXXXXXX or email info@colonelacademy.edu. Our staff will be honored to assist you during working hours."
+    },
+    {
+      q: /hostel|boarding|residence|stay/i,
+      a: "Respected visitor, we regret to inform that currently we do not offer hostel or boarding facilities. However, we would be honored to suggest some reputable options nearby if required."
+    },
+    {
+      q: /scholarship|discount|concession|financial aid|support/i,
+      a: "Honored parent, merit-based scholarships and need-based concessions are available for deserving students. We respectfully suggest contacting our accounts office with relevant documents for eligibility criteria and application procedures."
+    },
+    {
+      q: /online|digital|e-learning|portal|platform|website/i,
+      a: "With respect, we provide comprehensive digital learning resources through our secure online portal. You may kindly login with your credentials or contact our IT support team at it-support@colonelacademy.edu for assistance."
+    },
+    {
+      q: /safety|security|protection|environment/i,
+      a: "Respected parent, the safety and security of our students is our utmost priority. We maintain strict security protocols, CCTV surveillance, and a nurturing environment to ensure your child's wellbeing."
+    },
+    {
+      q: /extra-curricular|activities|clubs|societies/i,
+      a: "With pleasure, we inform you about our diverse range of extracurricular activities including literary clubs, science societies, arts programs, and sports teams to nurture all-round development."
+    }
+  ];
+
+  // Enhanced typing indicator with animation
+  function showTyping() {
+    const typing = document.createElement('div');
+    typing.id = 'ai-typing';
+    typing.style = "margin-bottom:12px;color:#0056b3;display:flex;align-items:center;";
+    typing.innerHTML = `
+      <div style="font-weight:600;">CARE AI:</div>
+      <div class="typing-dots" style="margin-left:8px;display:flex;align-items:center;height:20px;">
+        <div class="dot" style="width:6px;height:6px;background-color:#0056b3;border-radius:50%;margin:0 2px;animation:typingAnimation 1.4s infinite ease-in-out;"></div>
+        <div class="dot" style="width:6px;height:6px;background-color:#0056b3;border-radius:50%;margin:0 2px;animation:typingAnimation 1.4s infinite ease-in-out 0.2s;"></div>
+        <div class="dot" style="width:6px;height:6px;background-color:#0056b3;border-radius:50%;margin:0 2px;animation:typingAnimation 1.4s infinite ease-in-out 0.4s;"></div>
+      </div>
+    `;
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+    
+    // Add animation style if not already present
+    if (!document.getElementById('typing-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'typing-animation-style';
+      style.textContent = `
+        @keyframes typingAnimation {
+          0%, 60%, 100% { transform: translateY(0); }
+          30% { transform: translateY(-4px); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+  
+  function hideTyping() {
+    const typing = document.getElementById('ai-typing');
+    if (typing) typing.remove();
+  }
+
+  // Add message to chat with enhanced formatting
+  function addMessage(sender, text, isHtml = false) {
+    const msgDiv = document.createElement('div');
+    msgDiv.style.marginBottom = '12px';
+    msgDiv.style.padding = '10px 14px';
+    msgDiv.style.borderRadius = '18px';
+    msgDiv.style.maxWidth = '80%';
+    msgDiv.style.wordWrap = 'break-word';
+    
+    if (sender === 'You') {
+      msgDiv.style.background = '#0056b3';
+      msgDiv.style.color = '#fff';
+      msgDiv.style.marginLeft = 'auto';
+      msgDiv.style.borderBottomRightRadius = '4px';
+    } else {
+      msgDiv.style.background = '#f0f0f0';
+      msgDiv.style.color = '#333';
+      msgDiv.style.marginRight = 'auto';
+      msgDiv.style.borderBottomLeftRadius = '4px';
+    }
+    
+    msgDiv.innerHTML = `<div style="font-weight:600;margin-bottom:4px;">${sender}</div>` + 
+      (isHtml ? text : escapeHtml(text));
+    
+    messages.appendChild(msgDiv);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // Escape HTML
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // Suggest FAQ with respectful language
+  function suggestFAQ() {
+    addMessage('CARE AI', `
+      <div style="font-size:14px;line-height:1.5;">
+        <p>Respected visitor, I'm honored to assist you. Here are some common inquiries:</p>
+        <ul style="margin:8px 0 0 20px;padding:0;list-style-type:disc;">
+          <li style="margin-bottom:6px;">What are the admission requirements and procedure?</li>
+          <li style="margin-bottom:6px;">Could you kindly share details about the fee structure?</li>
+          <li style="margin-bottom:6px;">Where is the esteemed institution located?</li>
+          <li style="margin-bottom:6px;">What are the school timings and academic calendar?</li>
+          <li style="margin-bottom:6px;">What facilities and infrastructure are available?</li>
+          <li style="margin-bottom:6px;">Are there any scholarship opportunities available?</li>
+          <li style="margin-bottom:6px;">What is the prescribed school uniform?</li>
+          <li style="margin-bottom:6px;">How may I contact a teacher or administrator?</li>
+        </ul>
+        <p style="margin-top:8px;">Please feel free to ask any other questions you may have.</p>
+      </div>
+    `, true);
+  }
+
+  // Enhanced response handler with respectful language
+  function generateResponse(userMsg) {
+    // Try to match FAQ
+    let reply = null;
+    for (let faq of faqs) {
+      if (faq.q.test(userMsg)) {
+        reply = faq.a;
+        break;
+      }
+    }
+    
+    // Contextual follow-up with respectful responses
+    if (!reply) {
+      const lowerMsg = userMsg.toLowerCase();
+      
+      if (/thank|thanks|grateful|appreciate/i.test(lowerMsg)) {
+        reply = "You're most welcome! It's been my privilege to assist you. Should you have any further questions, I'd be honored to help.";
+      } 
+      else if (/hi|hello|hey|greetings|namaste/i.test(lowerMsg)) {
+        reply = "Respected visitor, warm greetings! I'm CARE AI, your humble assistant. How may I be of service to you today?";
+      } 
+      else if (/photo|gallery|picture|building|campus/i.test(lowerMsg)) {
+        reply = "With pleasure, you may view our campus photos <a href='./photos.html' style='color:#0056b3;text-decoration:underline;'>here</a>. We take pride in our infrastructure.";
+      } 
+      else if (/website|site|webpage|portal/i.test(lowerMsg)) {
+        reply = "Respected visitor, you are currently browsing our official website. For comprehensive information, you may explore the menu or kindly ask me any specific questions.";
+      } 
+      else if (/sports|games|athletics|physical/i.test(lowerMsg)) {
+        reply = "Honored enquirer, we offer a diverse range of sports and athletics programs including cricket, basketball, athletics, and more. For detailed information, we suggest contacting our sports department.";
+      } 
+      else if (/library|books|reading|resource/i.test(lowerMsg)) {
+        reply = "With respect, our well-stocked library is open to all students during school hours, offering a wide range of books, journals, and digital resources to support academic excellence.";
+      }
+      else if (/who are you|what are you|your purpose/i.test(lowerMsg)) {
+        reply = "Respected visitor, I am CARE AI, a digital assistant created to serve you with information about our esteemed institution. My purpose is to provide accurate and helpful responses to your queries with the utmost respect.";
+      }
+      else if (/good ?bye|bye|see you|farewell/i.test(lowerMsg)) {
+        reply = "It's been an honor assisting you. Wishing you a wonderful day ahead. Please don't hesitate to return if you need any further assistance.";
+      }
+    }
+    
+    // Fallback response
+    if (!reply) {
+      reply = `
+        <div style="line-height:1.5;">
+          <p>Respected visitor, I sincerely apologize as I don't have that specific information at the moment.</p>
+          <p>You may kindly:</p>
+          <ul style="margin:8px 0 0 20px;padding:0;list-style-type:disc;">
+            <li style="margin-bottom:4px;">Visit our <a href='Contact.html' style='color:#0056b3;text-decoration:underline;'>Contact page</a> for direct communication</li>
+            <li style="margin-bottom:4px;">Reformulate your question for better understanding</li>
+            <li style="margin-bottom:4px;">Ask about another topic I can assist with</li>
+          </ul>
+          <p style="margin-top:8px;">Your understanding is much appreciated.</p>
+        </div>
+      `;
+    }
+    
+    return reply;
+  }
+
+  // Main chatbot handler with enhanced UX
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const userMsg = input.value.trim();
+    
+    if (!userMsg) {
+      suggestFAQ();
+      return;
+    }
+    
+    addMessage('You', userMsg);
+    chatHistory.push({role: 'user', content: userMsg});
+    input.value = '';
+    showTyping();
+
+    // Simulate more natural response time (0.7-1.5 seconds)
+    const delay = 700 + Math.random() * 800;
+    
+    setTimeout(() => {
+      hideTyping();
+      const reply = generateResponse(userMsg);
+      addMessage('CARE AI', reply, true);
+    }, delay);
+  };
+
+  // Input suggestions when focused
+  input.addEventListener('focus', () => {
+    if (messages.children.length <= 2) { // Only if it's the initial state
+      setTimeout(() => {
+        if (!input.value) {
+          suggestFAQ();
+        }
+      }, 500);
+    }
+  });
+
+  // Welcome message with animation
+  window.addEventListener('DOMContentLoaded', () => {
+    messages.innerHTML = '';
+    
+    setTimeout(() => {
+      addMessage('CARE AI', `
+        <div style="line-height:1.5;">
+          <p>Respected visitor, warm greetings!</p>
+          <p>I'm CARE AI, your dedicated assistant for <span style="font-weight:600;">Colonel Academy</span>.</p>
+          <p>It's my privilege to serve you with accurate information about our esteemed institution.</p>
+          <p>How may I assist you today?</p>
+        </div>
+      `, true);
+      
+      setTimeout(suggestFAQ, 800);
+    }, 300);
+  });
+
+  // Handle Enter key for submission
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.dispatchEvent(new Event('submit'));
+    }
+  });
+</script>
     <header>
     <h1>
       Colonel Academy of Radiant Education<br>
