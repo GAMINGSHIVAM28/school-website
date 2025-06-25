@@ -9,39 +9,7 @@
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Loader styles */
-    #loader {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #fff;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.7s;
-    }
-    #loader.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .loader-spinner {
-      border: 6px solid #e3f2fd;
-      border-top: 6px solid #003366;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
-    }
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.3rem; }
-      .header-banner h2 { font-size: 1.2rem; }
-      .navbar { gap: 1rem; }
-      .photo-button { width: 90%; }
-    }
+    
     /* Scroll to top button */
     #scrollTopBtn {
       display: none;
@@ -66,11 +34,6 @@
   </style>
 </head>
 <body>
-  <!-- Loader -->
-  <div id="loader">
-    <div class="loader-spinner"></div>
-  </div>
-
   <!-- Scroll to Top Button -->
   <button id="scrollTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
@@ -143,11 +106,6 @@
   </footer>
 
   <script>
-    // Loader hide on page load
-    window.addEventListener('load', function() {
-      document.getElementById('loader').classList.add('hide');
-    });
-
     // Scroll to top button logic
     const scrollBtn = document.getElementById('scrollTopBtn');
     window.onscroll = function() {
